@@ -1,118 +1,128 @@
 <!doctype html>
-<meta charset="utf-8"><style data-dc-design-system-vars>@layer{:root{--surface:#f2efe8;--surface-alt:#e7e3da;--ink:#16181d;--ink-muted:#3d3f45;--star-red:#b0272d;--star-gold:#f4e4bc;--sand:#d9cbb0;--night:#121a2e;--space-2:8px;--space-4:16px;--space-8:32px;--space-16:64px;--radius-none:0px;--radius-sm:6px;--radius-seal:16px;--font-display:"Fraunces", Georgia, serif;--font-sans:"Archivo", system-ui, sans-serif;--text-display-xl:900 96px/0.9 var(--font-display);--text-display-l:900 56px/0.95 var(--font-display);--text-heading:800 32px/1.1 var(--font-display);--text-body:400 16px/24px var(--font-sans);--text-small:400 14px/20px var(--font-sans);--text-tagline:400 13px/18px var(--font-sans);--text-label:500 11px/16px var(--font-sans);}}</style>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>MAUNI — сайт, концепция «Спуск в тишину»</title>
-<script src="./vendor/react.js"></script>
-<script src="./vendor/react-dom.js"></script>
-<script src="./support.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAUNI</title>
+<meta name="description" content="MAUNI — Kaspi магазин, Instagram и WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1f232b;
+    --ink: #f2efe8;
+    --red: #b0272d;
+    --red-dark: #8f1f24;
+    --muted: #c9c5bc;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Archivo', system-ui, sans-serif;
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+  }
+  .scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    z-index: 0;
+  }
+
+  .stack {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    width: 100%;
+    margin-top: 6vh;
+  }
+  .logo {
+    width: min(340px, 78vw);
+    height: auto;
+    display: block;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(310px, 88vw);
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 46px;
+    padding: 0 18px;
+    border: 1px solid var(--muted);
+    color: var(--ink);
+    text-decoration: none;
+    font-stretch: 125%;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: rgba(31, 35, 43, 0.6);
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .links a:hover,
+  .links a:focus-visible {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .links a.primary {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .links a.primary:hover,
+  .links a.primary:focus-visible {
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+    color: var(--ink);
+  }
+  .links a .arrow {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  @media (max-width: 480px) {
+    .stack { gap: 24px; margin-top: 4vh; }
+  }
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400;62..125,500;62..125,700&amp;family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,400;1,9..144,700&amp;display=swap" rel="stylesheet">
-<style>
-body{margin:0;background:#FFFFFF}
-a{color:#16181D}a:hover{color:#B0272D}
-</style>
-</helmet>
-<div style="font-family: 'Archivo', system-ui, sans-serif; color: #16181D; background: #FFFFFF">
-
-<section id="top" style="position: relative; overflow: hidden; height: 900px; background: #1F232B; color: #FFFFFF">
-<img src="./assets/2740d315005f6f7cb13c9dfdaf0c88f6.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom">
-<div style="position: relative; height: 100%; max-width: 1360px; margin: 0 auto; padding: 32px 40px 48px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px">
-<div style="display: flex; align-items: center; gap: 14px"><span style="width: 28px; height: 2px; background: #FFFFFF; display: inline-block"></span>4 979 М · ВЕРШИНА</div>
-<nav style="display: flex; flex-wrap: wrap; gap: 28px">
-<a href="exhibits.html" style="text-decoration: none; color: #FFFFFF">ЭКСПОНАТЫ</a>
-<a href="#silence" style="text-decoration: none; color: #FFFFFF">ИСТОРИЯ</a>
-<a href="#night" style="text-decoration: none; color: #FFFFFF">KASPI</a>
-<a href="https://instagram.com/mauni.kz" style="text-decoration: none; color: #FFFFFF">INSTAGRAM</a>
-</nav>
-</div>
-<div style="display: flex; flex-direction: column; gap: 36px">
-<img src="./assets/9fd80deaf1095ac3d5ece139b1cbce13.svg" alt="mauni" style="width: 100%; max-width: 1240px; height: auto; display: block">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
-
-
-</div>
-</div>
-</div>
-</section>
-
-<section id="silence" style="position: relative; height: 820px; background: #FFFFFF; border-top: 1px solid #E5E5E5">
-<div style="position: absolute; left: 40px; top: 40px; display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px"><span style="width: 28px; height: 2px; background: #16181D; display: inline-block"></span>4 200 М · ТИШИНА</div>
-<div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; padding: 0 24px; text-align: center">
-<h2 style="margin: 0; max-width: 900px; font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(40px, 5.4vw, 76px); line-height: 1.02; letter-spacing: -1px">Мауни — тот, кто поднялся и замолчал.</h2>
-<div style="font-size: 13px; font-stretch: 125%; letter-spacing: 5px; color: #3D3F45">МАУНА · САНСКРИТ · «ХРАНЯЩИЙ ТИШИНУ»</div>
-</div>
-</section>
-
-<section id="exhibits" style="position: relative; height: 760px; background: #F4F4F4">
-<div style="position: absolute; left: 40px; top: 40px; display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px"><span style="width: 28px; height: 2px; background: #16181D; display: inline-block"></span>3 600 М · ЭКСПОНАТЫ</div>
-<div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding: 0 24px; text-align: center">
-<p style="margin: 0; max-width: 720px; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: clamp(26px, 3vw, 40px); line-height: 1.3">Мы не продаём «товары». Мы собираем вещи, которые достойны стоять на полке как экспонат.</p>
-<a href="exhibits.html" style="text-decoration: none; border: 1.5px solid #16181D; padding: 18px 36px; font-size: 13px; font-weight: 500; font-stretch: 125%; letter-spacing: 5px">ВОЙТИ В ЗАЛ ЭКСПОНАТОВ</a>
-</div>
-</section>
-
-<section style="position: relative; background: #B0272D; color: #F2EFE8; padding: 140px 40px">
-<div style="position: absolute; left: 40px; top: 40px; display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px"><span style="width: 28px; height: 2px; background: #FFFFFF; display: inline-block"></span>2 800 М · ЗВЁЗДЫ</div>
-<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 72px">
-<svg viewBox="0 0 40 40" width="300" height="300" role="img" aria-label="Три звезды MAUNI" style="flex: 0 0 auto; max-width: 100%"><circle cx="20" cy="10" r="6" fill="#F4E4BC"></circle><circle cx="10" cy="27.5" r="6" fill="#F4E4BC"></circle><circle cx="30" cy="27.5" r="6" fill="#F4E4BC"></circle></svg>
-<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 26px">
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(40px, 5vw, 68px); line-height: 1">Три звезды над «i».</h2>
-<p style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 24px; line-height: 1.45">Это ты — под небом, на своей вершине.<br>Это три пика Талгара над Есиком.<br>Это три основы: гора, звезда, тишина.</p>
-<div style="font-size: 13px; font-stretch: 125%; letter-spacing: 6px; color: #F4E4BC">ТАУ · ЖҰЛДЫЗ · ТЫНЫШТЫҚ</div>
-</div>
-</div>
-</section>
-
-<section style="position: relative; overflow: hidden; background: #16181D; color: #F2EFE8; padding: 140px 40px 160px">
-<img src="./assets/f8abde1ffba890cd8e9f93d8e48bdf06.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover">
-<div style="position: absolute; left: 40px; top: 40px; display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px"><span style="width: 28px; height: 2px; background: #FFFFFF; display: inline-block"></span>1 900 М · ГОЛОСА</div>
-<div style="position: relative; max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px">
-<figure style="margin: 0; max-width: 640px; display: flex; flex-direction: column; gap: 14px">
-<blockquote style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.2">«Лёгкая, приятная. Так кайф.»</blockquote>
-<figcaption style="font-size: 12px; letter-spacing: 4px; color: #C9C5BC">САНЖАР · KASPI</figcaption>
-</figure>
-<figure lang="kk" style="margin: 0 0 0 auto; max-width: 640px; display: flex; flex-direction: column; gap: 14px; text-align: right">
-<blockquote style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.2">«Рақмет. Өте қуандық.»</blockquote>
-<figcaption style="font-size: 12px; letter-spacing: 4px; color: #C9C5BC">АСЕЛ · KASPI</figcaption>
-</figure>
-<figure style="margin: 0 0 0 12%; max-width: 640px; display: flex; flex-direction: column; gap: 14px">
-<blockquote style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.2">«Товар соответствует фото, качество хорошее.»</blockquote>
-<figcaption style="font-size: 12px; letter-spacing: 4px; color: #C9C5BC">БЕРІК · KASPI</figcaption>
-</figure>
-<div style="font-size: 13px; font-stretch: 125%; letter-spacing: 5px; color: #F4E4BC">★★★★★ 5.0 · 78 ОТЗЫВОВ · С 2023 ГОДА</div>
-</div>
-</section>
-
-<section id="night" style="position: relative; overflow: hidden; height: 900px; background: #121A2E; color: #F2EFE8">
-<img src="./assets/6277819fa15a2d87e2dc096740cfe56d.svg" alt="" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover">
-<div style="position: absolute; left: 40px; top: 40px; display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; font-stretch: 125%; letter-spacing: 4px"><span style="width: 28px; height: 2px; background: #FFFFFF; display: inline-block"></span>0 М · НОЧЬ</div>
-<div style="position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding: 0 24px; text-align: center">
-<img src="./assets/d6a1063921167d2088b46b054ade488d.svg" alt="Печать MAUNI" style="width: 132px; height: 132px">
-<p style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: clamp(26px, 3vw, 40px); line-height: 1.3">Тау. Жұлдыз. Тыныштық.</p>
-<nav style="display: flex; flex-wrap: wrap; justify-content: center; gap: 36px; font-size: 13px; font-stretch: 125%; letter-spacing: 4px">
-<a href="#night" style="color: #F2EFE8">KASPI [ССЫЛКА]</a>
-<a href="https://instagram.com/mauni.kz" style="color: #F2EFE8">INSTAGRAM @MAUNI.KZ</a>
-<a href="#night" style="color: #F2EFE8">WHATSAPP [НОМЕР]</a>
-</nav>
-</div>
-<div style="position: absolute; left: 0; right: 0; bottom: 28px; text-align: center; font-size: 11px; letter-spacing: 4px; color: #C9C5BC">EST. 2026 — ESIK, KAZAKHSTAN · ИП PATH OF PEAKS</div>
-</section>
-
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5000}}'>
-class Component extends DCLogic {
-renderVals() {
-return {};
-}
-}
-</script>
+<main class="hero">
+  <img class="scene" src="./assets/2740d315005f6f7cb13c9dfdaf0c88f6.svg" alt="" aria-hidden="true">
+  <div class="stack">
+    <img class="logo" src="./assets/9fd80deaf1095ac3d5ece139b1cbce13.svg" alt="mauni">
+    <nav class="links">
+      <!-- Ссылка на магазин Kaspi: вставьте адрес вместо # -->
+      <a class="primary" href="#">Kaspi магазин <span class="arrow">→</span></a>
+      <a href="https://instagram.com/mauni.kz" target="_blank" rel="noopener">Instagram <span class="arrow">→</span></a>
+      <!-- WhatsApp: вставьте номер в формате 7XXXXXXXXXX вместо X -->
+      <a href="https://wa.me/7XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp <span class="arrow">→</span></a>
+    </nav>
+  </div>
+</main>
 </body>
 </html>
