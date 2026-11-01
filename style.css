@@ -1,0 +1,223 @@
+:root {
+  --bg: #1f232b;
+  --ink: #f2efe8;
+  --red: #b0272d;
+  --red-dark: #8f1f24;
+  --muted: #c9c5bc;
+  --card: #2a2f39;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Archivo', system-ui, sans-serif;
+}
+a { color: inherit; }
+
+/* Главная: горы на весь экран */
+.hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  background-color: var(--bg);
+  background-image: url("./assets/2740d315005f6f7cb13c9dfdaf0c88f6.svg");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  width: 100%;
+  margin-top: 6vh;
+}
+.logo {
+  width: min(340px, 78vw);
+  height: auto;
+  display: block;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(310px, 88vw);
+}
+.links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--muted);
+  color: var(--ink);
+  text-decoration: none;
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  background: rgba(31, 35, 43, 0.6);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.links a:hover,
+.links a:focus-visible {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+.links a.primary {
+  background: var(--red);
+  border-color: var(--red);
+}
+.links a.primary:hover,
+.links a.primary:focus-visible {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  color: var(--ink);
+}
+.arrow {
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+/* Страница товаров */
+.catalog {
+  padding: 48px 16px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.back {
+  display: inline-block;
+  margin-bottom: 28px;
+  font-stretch: 125%;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--muted);
+}
+.back:hover { color: var(--ink); }
+.catalog-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+  font-stretch: 125%;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--muted);
+}
+.catalog-head h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--ink);
+}
+.store-link {
+  color: var(--ink);
+  text-decoration: underline;
+  letter-spacing: 3px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid #343a46;
+}
+.card-img {
+  aspect-ratio: 1 / 1;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  flex: 1;
+}
+.badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 18px;
+}
+.badge {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+}
+.badge.hit {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--ink);
+}
+.card-name {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-price {
+  margin-top: auto;
+  font-size: 16px;
+  font-weight: 700;
+}
+.buy {
+  display: block;
+  margin-top: 4px;
+  padding: 10px 0;
+  text-align: center;
+  background: var(--red);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-stretch: 125%;
+  font-weight: 500;
+}
+.buy:hover,
+.buy:focus-visible {
+  background: var(--red-dark);
+}
+
+@media (max-width: 480px) {
+  .stack { gap: 24px; margin-top: 4vh; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .catalog { padding: 36px 12px 64px; }
+}
