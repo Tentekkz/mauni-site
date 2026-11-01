@@ -1,0 +1,9 @@
+{
+  "name": "mauni-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MAUNI Official Website & Exhibition Catalog",
+  "scripts": {
+    "sync": "node sync.js"
+  }
+}

@@ -1,0 +1,38 @@
+name: Auto Sync Catalog from KitSeller
+
+on:
+  schedule:
+    # Запуск каждые 6 часов
+    - cron: '0 */6 * * *'
+  # Возможность запустить синхронизацию вручную в один клик из интерфейса GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run KitSeller synchronizer
+        run: node sync.js
+
+      - name: Commit and push changes if updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add products.js
+          if git diff --staged --quiet; then
+            echo "Каталог актуален, изменений нет."
+          else
+            git commit -m "Автоматическая синхронизация товаров с KitSeller / Kaspi"
+            git push
+          fi
