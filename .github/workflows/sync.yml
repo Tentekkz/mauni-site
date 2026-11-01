@@ -36,3 +36,4 @@ jobs:
             git commit -m "Автоматическая синхронизация товаров с KitSeller / Kaspi"
             git push
           fi
+
