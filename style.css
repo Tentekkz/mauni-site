@@ -966,16 +966,8 @@ body.exhibition-page {
 }
 
 /* ==========================================================================
-   ЗАСТАВКА «ТЁМНЫЙ ЗАЛ» (INDEX.HTML)
+   ГЛАВНАЯ: ТЁМНЫЙ ГЕРОЙ И ЗАСТАВКА «ТЁМНЫЙ ЗАЛ» (INDEX.HTML)
    ========================================================================== */
-
-body.hall-page {
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: #e9e5dc;
-  color: var(--dark);
-  overflow-x: hidden;
-}
 
 body.hall-page.is-dark {
   height: 100dvh;
@@ -985,41 +977,47 @@ body.hall-page.is-dark {
   -webkit-user-select: none;
 }
 
-/* Стена */
+.is-dark .stack {
+  visibility: hidden;
+}
+
+/* Стена с экспонатами: в темноте её ищут фонариком, при свете она остаётся фоном главной */
+body.hall-page {
+  background: #0d0e13;
+}
+
 .hall-wall {
   position: fixed;
   inset: 0;
-  padding: 3vh 3vw;
+  z-index: 1;
   display: grid;
+  padding: 7vh 4vw 5vh;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 3vh 3vw;
-  background:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 30%),
-    linear-gradient(to top, rgba(60, 50, 35, 0.18), rgba(60, 50, 35, 0) 24%),
-    #e9e5dc;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 5vh 2.5vw;
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #20232b 0, #0d0e13 75%);
 }
 
 .hall-frame {
+  position: relative;
   min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   pointer-events: none;
+  color: #c9c5bb;
+  text-decoration: none;
 }
 
 .is-lit .hall-frame {
   pointer-events: auto;
 }
 
-/* Лёгкий сдвиг рамок, чтобы стена выглядела развешанной руками */
-.hall-frame:nth-child(odd) { transform: translateY(1.4vh); }
-.hall-frame:nth-child(3n) { transform: translateY(-1.2vh); }
-
 .hall-frame-box {
+  position: relative;
   flex: 0 1 auto;
   min-height: 0;
   max-width: 100%;
@@ -1028,13 +1026,10 @@ body.hall-page.is-dark {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(8px, 1.5vw, 22px);
+  padding: clamp(8px, 1.2vw, 20px);
   background: #fff;
-  border: clamp(4px, 0.6vw, 9px) solid #17151a;
-  box-shadow:
-    0 18px 30px rgba(30, 24, 14, 0.32),
-    0 2px 5px rgba(30, 24, 14, 0.3);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: clamp(4px, 0.5vw, 8px) solid #17151a;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55);
 }
 
 .hall-frame-box img {
@@ -1044,8 +1039,45 @@ body.hall-page.is-dark {
   display: block;
 }
 
-.is-lit .hall-frame:hover .hall-frame-box {
+.hall-frame-box {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-lit .hall-frame:hover .hall-frame-box,
+.is-lit .hall-frame:focus-visible .hall-frame-box {
   transform: scale(1.03);
+}
+
+/* Тёплый луч от лампы на стену и картину, когда свет включён */
+.hall-frame-box::after {
+  content: '';
+  position: absolute;
+  left: -22%;
+  right: -22%;
+  top: -10px;
+  height: 85%;
+  background: radial-gradient(ellipse 55% 100% at 50% 0, rgba(255, 236, 190, 0.32), rgba(255, 236, 190, 0) 72%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.is-lit .hall-frame-box::after {
+  opacity: 1;
+}
+
+/* Лампа над картиной */
+.hall-frame-box::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: calc(-1 * clamp(16px, 1.7vw, 24px));
+  width: 42%;
+  height: 6px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: linear-gradient(#c0a566, #85703f);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hall-frame-label {
@@ -1056,15 +1088,14 @@ body.hall-page.is-dark {
   white-space: nowrap;
   font-size: 10px;
   letter-spacing: 1px;
-  color: var(--dark);
   text-transform: uppercase;
 }
 
 .hall-frame-label b {
-  color: var(--red);
+  color: #e0453f;
 }
 
-/* Найденная рамка отмечается красной точкой, как купленная работа на выставке */
+/* Найденная в темноте рамка отмечается красной точкой, как купленная работа */
 .hall-frame.found .hall-frame-label::after {
   content: '';
   flex: none;
@@ -1072,87 +1103,57 @@ body.hall-page.is-dark {
   height: 8px;
   margin: auto 0;
   border-radius: 50%;
-  background: var(--red);
+  background: #e0453f;
 }
 
-/* Меню */
-.hall-plaque {
-  position: fixed;
-  left: 50%;
-  top: 50%;
+/* Меню поверх освещённой стены */
+.hall-menu {
+  position: relative;
   z-index: 2;
-  width: min(340px, calc(100vw - 32px));
-  padding: 28px 24px 18px;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 20px;
-  background: #fff;
-  border: 1px solid var(--red);
-  box-shadow: 0 24px 60px rgba(30, 24, 14, 0.35);
-  transform: translate(-50%, -50%);
+  justify-content: center;
+  padding: 24px 16px;
+  pointer-events: none;
 }
 
-.is-dark .hall-plaque {
-  visibility: hidden;
+.hall-menu .stack {
+  margin-top: 0;
+  width: min(380px, 100%);
+  padding: 28px 24px 14px;
+  background: rgba(10, 11, 15, 0.78);
+  border: 1px solid rgba(242, 239, 232, 0.14);
+  border-radius: 6px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
 }
 
-.is-lit .hall-plaque {
-  animation: plaque-in 0.7s 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+.hall-menu .logo {
+  width: min(220px, 60vw);
 }
 
-@keyframes plaque-in {
+.is-lit .hall-menu .stack {
+  animation: menu-in 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes menu-in {
   from {
     opacity: 0;
-    transform: translate(-50%, calc(-50% + 18px));
+    transform: translateY(16px);
   }
 }
 
-.hall-plaque-logo {
-  width: 170px;
-  height: auto;
-  display: block;
+@media (prefers-reduced-motion: reduce) {
+  .is-lit .hall-menu .stack {
+    animation: none;
+  }
 }
 
-.hall-links {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.hall-links a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 46px;
-  padding: 0 14px;
-  border-top: 1px solid rgba(176, 39, 45, 0.3);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  transition: background 0.2s, color 0.2s;
-}
-
-.hall-links a:hover,
-.hall-links a:focus-visible {
-  color: var(--red);
-  background: #faf9f6;
-}
-
-.hall-links a.primary {
-  border-top: 0;
-  background: var(--red);
-  color: #fff;
-  font-weight: 700;
-}
-
-.hall-links a.primary:hover,
-.hall-links a.primary:focus-visible {
-  background: var(--red-hover);
-  color: #fff;
-}
-
+/* Маленькие кнопки под меню */
 .hall-relight {
   min-height: 32px;
   border: 0;
@@ -1161,16 +1162,23 @@ body.hall-page.is-dark {
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #6d6a64;
+  color: #8b92a3;
   cursor: pointer;
 }
 
 .hall-relight:hover {
-  color: var(--red);
+  color: #f2efe8;
 }
 
 .hall-relight[hidden] {
   display: none;
+}
+
+.lang-toggle {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* Темнота: сплошной слой с прозрачным пятном луча */
@@ -1282,10 +1290,13 @@ body.hall-page.is-dark {
 
 @media (max-width: 700px) {
   .hall-wall {
+    padding: 18vh 14px 13vh;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    padding: 2vh 12px;
-    gap: 2vh 12px;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 5vh 14px;
+  }
+  .hall-frame:nth-child(n + 7) {
+    display: none;
   }
   .hall-frame-label {
     font-size: 9px;
@@ -1293,9 +1304,6 @@ body.hall-page.is-dark {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .is-lit .hall-plaque { animation: none; }
-}
 
 /* ==========================================================================
    КАТАЛОГ: ИНСТРУМЕНТЫ, МЕТКА ОСТАТКА, ПАСПОРТ
@@ -1899,9 +1907,9 @@ button.nav-link {
 
 .hall-plaque-foot {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
-  margin-top: -8px;
+  gap: 4px 16px;
 }
 
 .card-dots {
@@ -2588,5 +2596,41 @@ body.lost-page {
 @media (max-width: 900px) {
   #halls-nav {
     min-height: 34px;
+  }
+}
+
+/* Свет включён: светлая стена галереи, тёмные подписи */
+.is-lit .hall-wall {
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #f6f5f2 0, #e2e1dd 70%, #cfcdc8 100%);
+}
+
+body.hall-page.is-lit {
+  background: #e2e1dd;
+}
+
+.is-lit .hall-frame {
+  color: var(--dark);
+}
+
+.is-lit .hall-frame-label b {
+  color: var(--red);
+}
+
+.is-lit .hall-frame-box {
+  box-shadow: 0 16px 28px rgba(40, 38, 34, 0.28), 0 2px 5px rgba(40, 38, 34, 0.25);
+}
+
+/* Меню появляется, когда темнота полностью ушла */
+.is-lit .hall-menu .stack {
+  animation: none;
+}
+
+.is-lit:not(.is-dark) .hall-menu .stack {
+  animation: menu-in 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-lit:not(.is-dark) .hall-menu .stack {
+    animation: none;
   }
 }

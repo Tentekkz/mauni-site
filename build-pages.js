@@ -227,21 +227,58 @@ function renderHallPage(page, items, allPages) {
 `;
 }
 
-// Маленький файл для заставки: главной не нужен весь каталог
-function writeIntroData(products) {
-  const halls = ['KAWS', 'BE@RBRICK', 'Goyard', "Arc'teryx", 'Сумки', 'Декор & Арт'];
-  const data = [];
-  halls.forEach(hall => {
-    products.filter(p => p.exhibitHall === hall && p.img && p.sku)
-      .sort((a, b) => b.price - a.price)
-      .slice(0, 12)
-      .forEach(p => data.push({
-        id: p.id, sku: p.sku, img: p.img, price: p.price, priceStr: p.priceStr,
-        exhibitHall: p.exhibitHall, exhibitBrand: p.exhibitBrand
-      }));
-  });
-  fs.writeFileSync(path.join(__dirname, 'intro-data.js'), 'window.MAUNI_INTRO = ' + JSON.stringify(data) + ';\n');
+// ---------- Главная: рамки для заставки ----------
+const FEATURED_FILE = path.join(__dirname, 'data', 'featured.json');
+const WALL_SIZE = 8;
+const WALL_HALLS = ['KAWS', 'Goyard', "Arc'teryx", 'BE@RBRICK', 'Сумки', 'Головные уборы'];
+
+function loadFeatured() {
+  try {
+    const data = JSON.parse(fs.readFileSync(FEATURED_FILE, 'utf8'));
+    return { hero: data.hero || [], hide: data.hide || [] };
+  } catch (e) {
+    return { hero: [], hide: [] };
+  }
 }
+
+function homeFrame(p) {
+  return `<a class="hall-frame" href="e/${esc(encodeURI(pageFile(p)))}" tabindex="-1">
+      <span class="hall-frame-box"><img src="${esc(midImg(p.img))}" alt="" width="300" height="375"></span>
+      <span class="hall-frame-label"><b>№${String(p.id).padStart(2, '0')}</b><span>${esc(p.exhibitBrand || 'MAUNI')}</span><span>${esc(p.priceStr || '')}</span></span>
+    </a>`;
+}
+
+function writeHome(products) {
+  const file = path.join(__dirname, 'index.html');
+  const original = fs.readFileSync(file, 'utf8');
+  const crlf = original.includes('\r\n');
+  let html = original.replace(/\r\n/g, '\n');
+
+  const featured = loadFeatured();
+  const hide = new Set(featured.hide.map(String));
+  const usable = products.filter(p => p.img && !hide.has(String(p.sku)));
+  const bySku = new Map(products.map(p => [String(p.sku), p]));
+
+  // Сначала выбранные вручную, остальное добирается по кругу из разных залов, чтобы не было одних фигурок
+  const wall = [];
+  const addToWall = p => {
+    if (!p || !p.img || wall.length >= WALL_SIZE) return;
+    if (wall.includes(p) || wall.some(w => groupKey(w.name) === groupKey(p.name))) return;
+    wall.push(p);
+  };
+  featured.hero.forEach(sku => addToWall(bySku.get(String(sku))));
+  const queues = WALL_HALLS.map(hall => usable.filter(p => p.exhibitHall === hall).sort((a, b) => b.price - a.price));
+  for (let i = 0; wall.length < WALL_SIZE && i < 12; i++) queues.forEach(q => addToWall(q[i]));
+
+  const re = /<!--WALL-->[\s\S]*?<!--\/WALL-->/;
+  if (!re.test(html)) throw new Error('index.html: нет маркера WALL');
+  html = html.replace(re, () => `<!--WALL-->${wall.map(homeFrame).join('\n    ')}<!--/WALL-->`);
+
+  if (crlf) html = html.replace(/\n/g, '\r\n');
+  if (html !== original) fs.writeFileSync(file, html);
+  console.log(`[Home] Рамок для заставки: ${wall.length}`);
+}
+
 
 // Первая картинка каталога: браузер начинает её грузить, не дожидаясь скриптов
 function writeCatalogPreload(products) {
@@ -307,7 +344,7 @@ function main() {
   fs.readdirSync(HALL_DIR).forEach(file => {
     if (file.endsWith('.html') && !hallFiles.has(file)) fs.unlinkSync(path.join(HALL_DIR, file));
   });
-  writeIntroData(products);
+  writeHome(products);
   writeCatalogPreload(products);
 
   const urls = [`${SITE}/`, `${SITE}/catalog.html`, ...[...hallFiles].map(f => `${SITE}/hall/${f}`), ...[...expected].map(f => `${SITE}/e/${encodeURI(f)}`)];

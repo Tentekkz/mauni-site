@@ -976,6 +976,8 @@
       state.search = query;
       if (el.search) el.search.value = query;
     }
+    const hallParam = params.get('hall');
+    if (hallParam && HALLS.some(h => h.id === hallParam)) state.hall = hallParam;
     renderHalls();
     initEvents();
     updateUI();

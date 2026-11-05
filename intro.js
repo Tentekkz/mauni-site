@@ -1,8 +1,8 @@
 /**
  * MAUNI — заставка «Тёмный зал».
  * Стена с экспонатами в темноте: курсор или палец работает как фонарик.
- * Найдены все рамки или нажата кнопка — загорается свет, появляется меню.
- * Повторным посетителям заставка не показывается (можно выключить свет кнопкой).
+ * Найдены все рамки или нажата кнопка — загорается свет, стена остаётся, поверх неё меню.
+ * Повторным посетителям заставка не показывается (можно включить кнопкой под меню).
  */
 (function () {
   'use strict';
@@ -18,74 +18,13 @@
   const switchBtn = $('hall-switch');
   const relightBtn = $('hall-relight');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const allFrames = Array.from(wall.querySelectorAll('.hall-frame'));
 
+  // Заставка показывается один раз за сессию: новая вкладка или новый заход снова открывают тёмный зал
   function store(fn, fallback) {
-    try { return fn(window.localStorage); } catch (e) { return fallback; }
+    try { return fn(window.sessionStorage); } catch (e) { return fallback; }
   }
 
-  // ---------- Экспозиция: каждый раз немного новая, только из живого каталога ----------
-  const SOURCE = [
-    { hall: 'KAWS', take: 2 },
-    { hall: 'BE@RBRICK', take: 2 },
-    { hall: 'Goyard', take: 1 },
-    { hall: "Arc'teryx", take: 1 },
-    { hall: 'Сумки', take: 1 },
-    { hall: 'Декор & Арт', take: 1 }
-  ];
-
-  function shuffle(list) {
-    const a = list.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  function pickExhibits(limit) {
-    const all = window.MAUNI_INTRO || [];
-    const used = new Set();
-    const picked = [];
-    SOURCE.forEach(({ hall, take }) => {
-      // самые дорогие в зале — самые эффектные; из них берём случайные
-      const top = all
-        .filter(p => p.exhibitHall === hall && p.img && p.sku)
-        .sort((a, b) => b.price - a.price)
-        .slice(0, 12);
-      shuffle(top).forEach(p => {
-        if (take > 0 && !used.has(p.img)) {
-          used.add(p.img);
-          picked.push(p);
-          take--;
-        }
-      });
-    });
-    return shuffle(picked).slice(0, limit);
-  }
-
-  const bigImg = url => String(url).replace('format=gallery-small', 'format=preview-large');
-
-  function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]
-    ));
-  }
-
-  function buildWall() {
-    const count = window.innerWidth < 700 ? 6 : 8;
-    wall.innerHTML = pickExhibits(count).map(p => `
-      <a class="hall-frame" href="catalog.html?exhibit=${encodeURIComponent(p.sku)}" tabindex="-1">
-        <span class="hall-frame-box"><img src="${escapeHtml(bigImg(p.img))}" alt=""></span>
-        <span class="hall-frame-label">
-          <b>№${String(p.id).padStart(2, '0')}</b>
-          <span>${escapeHtml(p.exhibitBrand || 'MAUNI')}</span>
-          <span>${escapeHtml(p.priceStr || '')}</span>
-        </span>
-      </a>
-    `).join('');
-  }
-
-  // ---------- Фонарик ----------
   const frames = [];
   const beam = { x: 0, y: 0, tx: 0, ty: 0, r: 0 };
   let raf = 0;
@@ -96,7 +35,8 @@
 
   function measure() {
     frames.length = 0;
-    wall.querySelectorAll('.hall-frame').forEach(el => {
+    allFrames.forEach(el => {
+      if (!el.getClientRects().length) return; // на телефоне часть рамок скрыта
       const r = el.getBoundingClientRect();
       frames.push({ el, x: r.left + r.width / 2, y: r.top + r.height / 2, found: el.classList.contains('found') });
     });
@@ -113,10 +53,10 @@
     raf = requestAnimationFrame(tick);
 
     // пока человек не двигает, луч сам бродит по стене и показывает, что делать
-    if (!touched) {
-      const t = (now - startedAt) / 1000;
-      beam.tx = window.innerWidth * (0.5 + 0.34 * Math.sin(t * 0.55));
-      beam.ty = window.innerHeight * (0.5 + 0.28 * Math.sin(t * 0.9 + 1));
+    if (!touched && !reduced) {
+      const s = (now - startedAt) / 1000;
+      beam.tx = window.innerWidth * (0.5 + 0.34 * Math.sin(s * 0.55));
+      beam.ty = window.innerHeight * (0.5 + 0.28 * Math.sin(s * 0.9 + 1));
     }
     const k = touched ? 0.22 : 0.05;
     beam.x += (beam.tx - beam.x) * k;
@@ -154,9 +94,10 @@
     inDark = true;
     touched = false;
     foundCount = 0;
-    wall.querySelectorAll('.found').forEach(el => el.classList.remove('found'));
+    allFrames.forEach(el => el.classList.remove('found'));
     document.body.classList.add('is-dark');
     document.body.classList.remove('is-lit');
+    window.scrollTo(0, 0);
     dark.hidden = false;
     hud.hidden = false;
     relightBtn.hidden = true;
@@ -185,14 +126,13 @@
       relightBtn.hidden = false;
     };
     if (reduced) { finish(); return; }
-    // лампы загораются с мерцанием, как в настоящем зале
+    // лампы загораются с мерцанием, и сквозь него уже видна светлая стена
+    document.body.classList.add('is-lit');
     dark.classList.add('flicker');
     dark.addEventListener('animationend', finish, { once: true });
   }
 
-  // ---------- Запуск ----------
   function init() {
-    buildWall();
     relightBtn.hidden = false;
 
     window.addEventListener('pointermove', onMove, { passive: true });
@@ -213,7 +153,8 @@
 
     const params = new URLSearchParams(window.location.search);
     const seen = store(s => s.getItem(SEEN_KEY), null);
-    if (params.has('intro') || (!seen && !reduced)) {
+    // Заставка нужна всем. Если в системе отключены анимации, убираем только мерцание и блуждающий луч
+    if (params.has('intro') || !seen) {
       enterDark();
     } else {
       document.body.classList.add('is-lit');
