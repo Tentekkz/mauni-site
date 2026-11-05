@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Экспонат не найден | MAUNI</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#050608">
+  <link rel="preload" href="/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://resources.cdn-kaspi.kz">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="lost-page">
+  <main class="lost">
+    <a href="/" class="lost-logo" aria-label="MAUNI, на главную">
+      <img src="/assets/9fd80deaf1095ac3d5ece139b1cbce13.svg" alt="MAUNI" width="160" height="46">
+    </a>
+
+    <div class="lost-frame" aria-hidden="true">
+      <span class="lost-frame-inner"></span>
+    </div>
+    <p class="lost-label"><b>№404</b> · Пустая рама</p>
+
+    <h1 class="lost-title">Этот экспонат уже покинул зал</h1>
+    <p class="lost-text">Возможно, товар продан или ссылка устарела. Попробуйте найти похожий:</p>
+
+    <form class="lost-search" action="/catalog.html" method="get" role="search">
+      <label class="visually-hidden" for="lost-q">Поиск по каталогу</label>
+      <input id="lost-q" name="q" type="search" placeholder="Например, kaws или шапка" autocomplete="off">
+      <button type="submit">Найти</button>
+    </form>
+
+    <nav class="lost-links">
+      <a class="primary" href="/catalog.html">Все экспонаты →</a>
+      <a href="/catalog.html?random=1">Случайный экспонат</a>
+      <a href="https://wa.me/77766088813" target="_blank" rel="noopener">Спросить в WhatsApp ↗</a>
+    </nav>
+  </main>
+  <script src="/analytics.js"></script>
+  <script>
+    // Прежний адрес страницы товара подсказывает, что искать
+    (function () {
+      var input = document.getElementById('lost-q');
+      var slug = decodeURIComponent(location.pathname.split('/').pop() || '').replace(/\.html$/, '');
+      if (window.mauniTrack) window.mauniTrack('page_404', { path: location.pathname });
+      if (slug && /[a-zа-я]{3}/i.test(slug) && !/^x[0-9a-z]+$/.test(slug) && !/^\d+$/.test(slug)) {
+        input.value = slug.replace(/[-_]+/g, ' ');
+      }
+    })();
+  </script>
+</body>
+</html>

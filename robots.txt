@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mauni.kz/sitemap.xml

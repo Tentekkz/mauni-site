@@ -10,6 +10,27 @@ const path = require('path');
 
 const KITSELLER_URL = 'https://app.kitseller.kz/store/mauni';
 const OUTPUT_FILE = path.join(__dirname, 'products.js');
+const FIRST_SEEN_FILE = path.join(__dirname, 'data', 'first-seen.json');
+
+// Запоминает, когда товар появился. Первый запуск считается исходным каталогом: 'base' не даёт метки «Новинка».
+function trackFirstSeen(products) {
+  let seen = null;
+  try {
+    seen = JSON.parse(fs.readFileSync(FIRST_SEEN_FILE, 'utf8'));
+  } catch (err) {
+    seen = null;
+  }
+  const isBaseline = seen === null;
+  const today = new Date().toISOString().slice(0, 10);
+  const store = seen || {};
+  products.forEach(p => {
+    if (!p.sku) return;
+    if (!store[p.sku]) store[p.sku] = isBaseline ? 'base' : today;
+    if (store[p.sku] !== 'base') p.firstSeen = store[p.sku];
+  });
+  fs.mkdirSync(path.dirname(FIRST_SEEN_FILE), { recursive: true });
+  fs.writeFileSync(FIRST_SEEN_FILE, JSON.stringify(store));
+}
 
 function categorize(name) {
   const n = name.toLowerCase();
@@ -77,6 +98,8 @@ function fetchCatalog() {
             badges: badges
           };
         });
+
+        trackFirstSeen(enriched);
 
         const jsCode = 'window.MAUNI_PRODUCTS = ' + JSON.stringify(enriched) + ';\n';
         fs.writeFileSync(OUTPUT_FILE, jsCode, 'utf8');

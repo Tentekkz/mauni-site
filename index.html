@@ -3,11 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>MAUNI — Каталог товаров | Kaspi, Instagram, WhatsApp</title>
   <meta name="description"
     content="MAUNI — оригинальные аксессуары, головные уборы Arc'teryx, сумки Fred Perry, фигурки Bearbrick & Kaws, автотовары. Заказ на Kaspi и в WhatsApp.">
-  <meta name="theme-color" content="#191c23">
+  <meta name="theme-color" content="#050608">
 
   <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
@@ -15,42 +15,68 @@
   <meta property="og:title" content="MAUNI — Официальный магазин в Казахстане">
   <meta property="og:description"
     content="Каталог оригинальных товаров: головные уборы, сумки, фигурки, автотовары. Доставка по Казахстану.">
-  <meta property="og:image" content="./assets/9fd80deaf1095ac3d5ece139b1cbce13.svg">
+  <meta property="og:image" content="https://mauni.kz/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <link rel="preload" href="/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://resources.cdn-kaspi.kz">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
-  <main class="hero">
-    <div class="hero-overlay"></div>
-    <div class="stack">
-      <img class="logo" src="./assets/9fd80deaf1095ac3d5ece139b1cbce13.svg" alt="MAUNI" width="340" height="97">
+<body class="hall-page">
+  <!-- Стена с экспонатами: рамки добавляет intro.js -->
+  <div class="hall-wall" id="hall-wall" aria-hidden="true"></div>
 
-      <nav class="links">
-        <a class="primary" href="catalog.html">
-          <span>Каталог</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://kaspi.kz/shop/info/merchant/30051789/address-list" target="_blank" rel="noopener">
-          <span>Kaspi магазин</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://instagram.com/mauni.kz" target="_blank" rel="noopener">
-          <span>Instagram</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://wa.me/77766088813" target="_blank" rel="noopener">
-          <span>WhatsApp</span>
-          <span class="arrow">→</span>
-        </a>
-      </nav>
+  <!-- То, что видно при включённом свете. Без JS страница просто показывает это меню. -->
+  <main class="hall-plaque" id="hall-plaque">
+    <img class="hall-plaque-logo" src="./assets/logo-dark.svg" alt="MAUNI" width="220" height="62">
+    <nav class="hall-links">
+      <a class="primary" href="catalog.html">
+        <span data-i18n="home.enter">Войти в зал</span>
+        <span class="arrow">→</span>
+      </a>
+      <a href="https://kaspi.kz/shop/info/merchant/30051789/address-list" target="_blank" rel="noopener">
+        <span data-i18n="home.kaspi">Kaspi магазин</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a href="https://instagram.com/mauni.kz" target="_blank" rel="noopener">
+        <span>Instagram</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a href="https://wa.me/77766088813" target="_blank" rel="noopener">
+        <span>WhatsApp</span>
+        <span class="arrow">↗</span>
+      </a>
+    </nav>
+    <div class="hall-plaque-foot">
+      <button type="button" class="hall-relight" id="hall-relight" data-i18n="intro.off" hidden>Выключить свет</button>
+      <button type="button" class="hall-relight lang-toggle" data-lang-toggle>Қаз</button>
     </div>
   </main>
+
+  <!-- Темнота с лучом фонаря -->
+  <div class="hall-dark" id="hall-dark" hidden></div>
+
+  <div class="hall-hud" id="hall-hud" hidden>
+    <img class="hall-hud-logo" src="./assets/9fd80deaf1095ac3d5ece139b1cbce13.svg" alt="" width="200" height="57">
+    <p class="hall-hint" id="hall-hint" data-i18n="intro.closed">Зал закрыт. Посветите на стену</p>
+    <div class="hall-hud-bottom">
+      <span class="hall-found" id="hall-found"></span>
+      <button type="button" class="hall-switch" id="hall-switch" data-i18n="intro.on">Включить свет</button>
+    </div>
+  </div>
+
+  <script src="./analytics.js" defer></script>
+  <script src="./i18n.js" defer></script>
+  <script src="./intro-data.js" defer></script>
+  <script src="./intro.js" defer></script>
 </body>
 
 </html>

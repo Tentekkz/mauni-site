@@ -12,12 +12,19 @@
   <meta property="og:url" content="https://mauni.kz/catalog.html">
   <meta property="og:title" content="MAUNI — Зал экспонатов">
   <meta property="og:description" content="Галерея оригинальных товаров: KAWS, BE@RBRICK, Goyard, Arc'teryx. Заказ на Kaspi и в WhatsApp.">
-  <meta property="og:image" content="./assets/logo-dark.svg">
+  <meta property="og:image" content="https://mauni.kz/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://resources.cdn-kaspi.kz">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <!--LCP-PRELOAD--><link rel="preload" as="image" href="https://resources.cdn-kaspi.kz/img/m/p/p0f/p2a/118767093.png?format=preview-large" fetchpriority="high"><!--/LCP-PRELOAD-->
   <link rel="stylesheet" href="./style.css">
 </head>
 <body class="exhibition-page" id="top">
@@ -30,10 +37,11 @@
       </a>
 
       <nav class="gallery-nav">
-        <a href="index.html" class="nav-link">ГЛАВНАЯ</a>
-        <a href="catalog.html" class="nav-link active">ЭКСПОНАТЫ</a>
+        <a href="index.html" class="nav-link" data-i18n="nav.home">Главная</a>
+        <a href="catalog.html" class="nav-link active" data-i18n="nav.exhibits">Экспонаты</a>
         <a href="https://kaspi.kz/shop/info/merchant/30051789/address-list" target="_blank" rel="noopener" class="nav-link">KASPI</a>
         <a href="https://instagram.com/mauni.kz" target="_blank" rel="noopener" class="nav-link">INSTAGRAM</a>
+        <button type="button" class="nav-link lang-toggle" data-lang-toggle>Қаз</button>
       </nav>
     </div>
   </header>
@@ -41,7 +49,13 @@
   <!-- СТРОКА ЗАГОЛОВКА -->
   <div class="gallery-title-row">
     <div class="gallery-hall-title">
-      ЗАЛ ЭКСПОНАТОВ · <span id="current-hall-label">ВСЕ</span>
+      <span data-i18n="hall.title">Зал экспонатов</span> · <span id="current-hall-label">ВСЕ</span>
+    </div>
+    <div class="gallery-tools">
+      <button type="button" class="tool-btn" id="btn-swipe" data-i18n="tool.swipe">Листать свайпами</button>
+      <button type="button" class="tool-btn" id="btn-random" data-i18n="tool.random">Случайный экспонат</button>
+      <button type="button" class="tool-btn" id="btn-gift" data-i18n="tool.gift">Подобрать подарок</button>
+      <button type="button" class="tool-btn" id="btn-pick"><span data-i18n="tool.picks">Подборка</span> · <span id="pick-count">0</span></button>
     </div>
     <div class="gallery-count" id="gallery-count">597 экспонатов</div>
   </div>
@@ -51,25 +65,45 @@
     <!-- ЛЕВЫЙ САЙДБАР -->
     <aside class="gallery-sidebar">
       <div class="sidebar-block">
-        <div class="sidebar-label">ЗАЛЫ</div>
+        <div class="sidebar-label" data-i18n="side.halls">Залы</div>
         <ul class="sidebar-nav" id="halls-nav">
           <!-- Генерируется из JS: Все, KAWS, BE@RBRICK, Goyard, Arc'teryx, Одежда... -->
         </ul>
       </div>
 
-      <div class="sidebar-block">
-        <div class="sidebar-label">ПОРЯДОК</div>
+      <button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="sidebar-extra-order">
+        <span data-i18n="side.filters">Фильтры</span><span id="filters-count"></span>
+      </button>
+
+      <div class="sidebar-block sidebar-extra" id="sidebar-extra-order">
+        <div class="sidebar-label" data-i18n="side.order">Порядок</div>
         <ul class="sidebar-nav" id="sort-nav">
-          <li><button type="button" class="sort-action active" data-sort="default">Новые</button></li>
-          <li><button type="button" class="sort-action" data-sort="price_asc">Цена ↑</button></li>
-          <li><button type="button" class="sort-action" data-sort="price_desc">Цена ↓</button></li>
+          <li><button type="button" class="sort-action active" data-sort="default" data-i18n="sort.new">Новые</button></li>
+          <li><button type="button" class="sort-action" data-sort="price_asc" data-i18n="sort.asc">Цена ↑</button></li>
+          <li><button type="button" class="sort-action" data-sort="price_desc" data-i18n="sort.desc">Цена ↓</button></li>
         </ul>
       </div>
 
+      <div class="sidebar-block sidebar-extra">
+        <div class="sidebar-label" data-i18n="side.price">Цена</div>
+        <ul class="sidebar-nav">
+          <li><button type="button" class="sort-action price-action active" data-band="all" data-i18n="price.all">Любая</button></li>
+          <li><button type="button" class="sort-action price-action" data-band="b5" data-i18n="price.b5">До 5 000 ₸</button></li>
+          <li><button type="button" class="sort-action price-action" data-band="b10" data-i18n="price.b10">5 000 – 10 000 ₸</button></li>
+          <li><button type="button" class="sort-action price-action" data-band="b25" data-i18n="price.b25">10 000 – 25 000 ₸</button></li>
+          <li><button type="button" class="sort-action price-action" data-band="top" data-i18n="price.top">От 25 000 ₸</button></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-block sidebar-extra">
+        <label class="sidebar-label" for="brand-select" data-i18n="side.brand">Бренд</label>
+        <select class="brand-select" id="brand-select"></select>
+      </div>
+
       <div class="sidebar-block sidebar-search-block">
-        <div class="sidebar-label">ПОИСК</div>
+        <div class="sidebar-label" data-i18n="side.search">Поиск</div>
         <div class="sidebar-search-wrap">
-          <input type="text" id="gallery-search" class="sidebar-search-input" placeholder="Найти...">
+          <input type="text" id="gallery-search" class="sidebar-search-input" placeholder="Найти..." data-i18n-ph="side.searchPh">
           <button type="button" id="sidebar-search-clear" class="sidebar-search-clear" aria-label="Очистить поиск" hidden>×</button>
         </div>
       </div>
@@ -77,15 +111,16 @@
 
     <!-- СЕТКА ЭКСПОНАТОВ -->
     <main class="gallery-main">
+      <section class="hall-intro" id="hall-intro" hidden></section>
       <div class="exhibit-grid" id="exhibit-grid">
         <!-- Карточки экспонатов -->
       </div>
 
       <!-- Сообщение если ничего не найдено -->
       <div class="exhibit-empty" id="exhibit-empty" hidden>
-        <h3>В данном зале нет экспонатов</h3>
-        <p>Попробуйте выбрать другой зал или сбросить поисковый запрос</p>
-        <button type="button" class="btn-exhibit-reset" id="btn-exhibit-reset">Вернуться ко всем экспонатам</button>
+        <h3 data-i18n="empty.title">В данном зале нет экспонатов</h3>
+        <p data-i18n="empty.text">Попробуйте выбрать другой зал или сбросить поисковый запрос</p>
+        <button type="button" class="btn-exhibit-reset" id="btn-exhibit-reset" data-i18n="empty.reset">Вернуться ко всем экспонатам</button>
       </div>
 
       <!-- Кнопка подгрузки -->
@@ -94,6 +129,8 @@
           Показать ещё экспонаты
         </button>
       </div>
+
+      <section class="recent-block" id="recent-block" hidden></section>
     </main>
   </div>
 
@@ -114,25 +151,84 @@
           <h2 class="modal-name" id="modal-name">Название экспоната</h2>
           <div class="modal-price" id="modal-price">0 ₸</div>
           <div class="modal-tags" id="modal-tags"></div>
+          <div class="modal-variants" id="modal-variants"></div>
+          <p class="modal-story" id="modal-story"></p>
           
           <div class="modal-actions-row">
+            <button type="button" id="modal-spin-btn" class="modal-btn-plain" data-i18n="modal.spin" hidden>Крутить ещё раз</button>
+            <button type="button" id="modal-fav-btn" class="modal-btn-plain">♡ В подборку</button>
             <a id="modal-kaspi-btn" class="modal-btn-kaspi" href="#" target="_blank" rel="noopener">
-              <span>Купить на Kaspi</span>
+              <span data-i18n="modal.kaspi">Купить на Kaspi</span>
               <span class="arrow-icon">↗</span>
             </a>
             <a id="modal-wa-btn" class="modal-btn-wa" href="#" target="_blank" rel="noopener">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.668-.699c.969.587 1.961.948 3.01.948h.005c3.18 0 5.767-2.586 5.768-5.766 0-1.543-.601-2.993-1.692-4.084a5.72 5.72 0 0 0-4.299-2.05zm0 10.375h-.004c-.93 0-1.844-.25-2.642-.724l-.19-.112-1.963.515.524-1.913-.123-.196a4.617 4.617 0 0 1-.708-2.479c.001-2.553 2.079-4.63 4.635-4.63 1.238 0 2.402.483 3.277 1.358a4.61 4.61 0 0 1 1.356 3.277c-.001 2.553-2.079 4.63-4.633 4.63zm2.541-3.468c-.139-.07-0.824-.407-.952-.454-.128-.046-.221-.07-.315.07-.093.139-.361.454-.442.547-.082.093-.163.105-.303.035-.139-.07-.588-.217-1.12-.691-.414-.369-.693-.825-.774-.964-.082-.139-.009-.214.061-.284.063-.062.139-.163.209-.244.07-.082.093-.139.139-.232.046-.093.023-.174-.012-.244-.035-.07-.315-.758-.431-1.039-.114-.273-.23-.236-.315-.24l-.269-.004c-.093 0-.244.035-.372.174-.128.139-.488.477-.488 1.163 0 .686.499 1.35.569 1.443.07.093.983 1.5 2.381 2.105.333.144.593.23.796.294.334.106.638.091.879.055.268-.04.824-.337.94-.662.116-.326.116-.605.081-.663-.035-.058-.128-.093-.267-.163z"/></svg>
-              <span>Заказать в WhatsApp</span>
+              <span data-i18n="modal.wa">Заказать в WhatsApp</span>
             </a>
+            <button type="button" id="modal-share-btn" class="modal-btn-text" data-i18n="modal.share">Поделиться</button>
           </div>
         </div>
       </div>
+      <div class="modal-similar" id="modal-similar"></div>
     </div>
+  </div>
+
+  <!-- СВАЙПЫ И ПОДБОРКА -->
+  <div class="swipe" id="swipe" role="dialog" aria-modal="true" aria-label="Просмотр экспонатов" hidden>
+    <div class="swipe-bar">
+      <button type="button" class="swipe-bar-btn" id="swipe-to-pick"><span data-i18n="tool.picks">Подборка</span> · <span id="swipe-pick-count">0</span></button>
+      <span class="swipe-progress" id="swipe-progress"></span>
+      <button type="button" class="swipe-close" id="swipe-close" aria-label="Закрыть">×</button>
+    </div>
+
+    <div class="swipe-view" id="swipe-view">
+      <div class="swipe-deck" id="swipe-deck"></div>
+      <div class="swipe-controls">
+        <button type="button" class="swipe-round" id="swipe-no" aria-label="Дальше">✕</button>
+        <button type="button" class="swipe-round like" id="swipe-yes" aria-label="В подборку">♥</button>
+      </div>
+      <p class="swipe-tip" data-i18n="swipe.tip">Вправо — в подборку, влево — дальше</p>
+    </div>
+
+    <div class="pick-view" id="pick-view" hidden>
+      <h2 class="pick-title" id="pick-title">Ваша подборка</h2>
+      <ul class="pick-list" id="pick-list"></ul>
+      <p class="pick-empty" id="pick-empty" data-i18n="pick.empty" hidden>Пока пусто. Отметьте экспонаты, которые понравились.</p>
+      <div class="pick-footer" id="pick-footer">
+        <div class="pick-total"><span data-i18n="pick.total">Итого</span><b id="pick-total"></b></div>
+        <p class="pick-note" id="pick-note" hidden></p>
+        <a class="pick-send" id="pick-send" href="#" target="_blank" rel="noopener" data-i18n="pick.send">Отправить в WhatsApp ↗</a>
+        <button type="button" class="pick-outline" id="pick-add-all" data-i18n="pick.addAll" hidden>Добавить всё в мою подборку</button>
+        <button type="button" class="pick-outline" id="pick-share" data-i18n="pick.share">Поделиться ссылкой</button>
+        <button type="button" class="pick-clear" id="pick-clear" data-i18n="pick.clear">Очистить подборку</button>
+      </div>
+      <button type="button" class="pick-back" id="pick-back">← К просмотру</button>
+    </div>
+  </div>
+
+  <!-- ПОДБОР ПОДАРКА -->
+  <div class="swipe" id="gift" role="dialog" aria-modal="true" aria-label="Подбор подарка" hidden>
+    <div class="swipe-bar">
+      <span class="swipe-bar-btn" data-i18n="gift.title">Подбор подарка</span>
+      <button type="button" class="swipe-close" id="gift-close" aria-label="Закрыть">×</button>
+    </div>
+    <div class="pick-view" id="gift-view"></div>
   </div>
 
   <!-- ТЕМНЫЙ ФУТЕР -->
   <footer class="gallery-footer">
-    <button type="button" class="footer-top-btn" id="footer-top-btn">← НАЗАД НА ВЕРШИНУ</button>
+    <button type="button" class="footer-top-btn" id="footer-top-btn" data-i18n="footer.top">← Назад на вершину</button>
+    <nav class="footer-halls">
+      <a href="hall/kaws.html">KAWS</a>
+      <a href="hall/bearbrick.html">BE@RBRICK</a>
+      <a href="hall/goyard.html">Goyard</a>
+      <a href="hall/arcteryx.html">Arc'teryx</a>
+      <a href="hall/golovnye-ubory.html">Головные уборы</a>
+      <a href="hall/sumki.html">Сумки</a>
+      <a href="hall/odezhda.html">Одежда</a>
+      <a href="hall/dekor.html">Декор &amp; Арт</a>
+      <a href="hall/avtotovary.html">Автотовары</a>
+    </nav>
     <div class="footer-links">
       <a href="https://kaspi.kz/shop/info/merchant/30051789/address-list" target="_blank" rel="noopener">KASPI [ССЫЛКА]</a>
       <a href="https://instagram.com/mauni.kz" target="_blank" rel="noopener">INSTAGRAM @MAUNI.KZ</a>
@@ -140,7 +236,12 @@
     </div>
   </footer>
 
+  <script src="./analytics.js"></script>
+  <script src="./i18n.js"></script>
+  <script src="./shared.js"></script>
   <script src="./products.js"></script>
   <script src="./catalog.js"></script>
+  <script src="./swipe.js"></script>
+  <script src="./gift.js"></script>
 </body>
 </html>
