@@ -2,9 +2,9 @@ name: Auto Sync Catalog from KitSeller
 
 on:
   schedule:
-    # Р—Р°РїСѓСЃРє РєР°Р¶РґС‹Рµ 6 С‡Р°СЃРѕРІ
+    # Запуск каждые 6 часов
     - cron: '0 */6 * * *'
-  # Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РїСѓСЃС‚РёС‚СЊ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЋ РІСЂСѓС‡РЅСѓСЋ РІ РѕРґРёРЅ РєР»РёРє РёР· РёРЅС‚РµСЂС„РµР№СЃР° GitHub
+  # Возможность запустить синхронизацию вручную в один клик из интерфейса GitHub
   workflow_dispatch:
 
 permissions:
@@ -34,9 +34,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add products.js data e hall index.html catalog.html sitemap.xml robots.txt
           if git diff --staged --quiet; then
-            echo "РљР°С‚Р°Р»РѕРі Р°РєС‚СѓР°Р»РµРЅ, РёР·РјРµРЅРµРЅРёР№ РЅРµС‚."
+            echo "Каталог актуален, изменений нет."
           else
-            git commit -m "РђРІС‚РѕРјР°С‚РёС‡РµСЃРєР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ С‚РѕРІР°СЂРѕРІ СЃ KitSeller / Kaspi"
+            git commit -m "Автоматическая синхронизация товаров с KitSeller / Kaspi"
             git push
           fi
-
